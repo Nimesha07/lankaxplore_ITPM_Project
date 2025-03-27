@@ -6,6 +6,10 @@ import Contact from "./pages/Contact";
 import SignupPage from "./pages/Signup";
 import LoginPage from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
+import Dashboard from "./pages/dashboard";
+import Admin from "./pages/admin";
+import Book from "./pages/book";
+import Edit from "./pages/edit";
 function App() {
   return (
     <Router>
@@ -16,6 +20,10 @@ function App() {
         <Route path="/signup" element={<SignupPage />}/>
         <Route path="/login" element={<LoginPage />}/>
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
+        <Route path="/dashboard" element={<Dashboard/>}/>
+        <Route path="/admin" element={<Admin/>}/>
+        <Route path="/book" element={<Book/>}/>
+        <Route path="/edit" element={<Edit/>}/>
 
 
       </Routes>
