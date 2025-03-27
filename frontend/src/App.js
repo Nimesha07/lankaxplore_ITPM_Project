@@ -10,6 +10,7 @@ import Dashboard from "./pages/dashboard";
 import Admin from "./pages/admin";
 import Book from "./pages/book";
 import Edit from "./pages/edit";
+import Details from "./pages/details";
 function App() {
   return (
     <Router>
@@ -24,6 +25,7 @@ function App() {
         <Route path="/admin" element={<Admin/>}/>
         <Route path="/book" element={<Book/>}/>
         <Route path="/edit" element={<Edit/>}/>
+        <Route path="/details" element={<Details/>}/>
 
 
       </Routes>

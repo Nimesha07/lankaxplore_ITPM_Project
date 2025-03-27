@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaMapMarkerAlt, FaHotel, FaUtensils, FaCar, FaClock } from "react-icons/fa";
+import { FaMapMarkerAlt, FaHotel, FaUtensils, FaCar, FaClock, FaStar, FaRegStar, FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -106,51 +106,102 @@ const TourPackages = () => {
     }
   };
 
+  const renderStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+
+    for (let i = 0; i < 5; i++) {
+      if (i < fullStars) {
+        stars.push(<FaStar key={i} className="text-yellow-400" />);
+      } else if (i === fullStars && hasHalfStar) {
+        stars.push(<FaStar key={i} className="text-yellow-400" />);
+      } else {
+        stars.push(<FaRegStar key={i} className="text-yellow-400" />);
+      }
+    }
+    return stars;
+  };
+
+  const handleEditPackage = (id) => {
+    navigate(`/edit-package/${id}`);
+  };
+
+  const handleDeletePackage = (id) => {
+    // Implement delete functionality
+    console.log('Delete package:', id);
+  };
+
+  const handleMoreInformation = (id) => {
+    const selectedPkg = packages.find(pkg => pkg.id === id);
+    navigate('/details', { state: { package: selectedPkg } });
+  };
+
   return (
-    <div className="container mx-auto p-6">
-      {/* Header Section */}
-      <div className="bg-gray-100 p-4 text-center mb-6">
-        <h2 className="text-xl font-bold">Sri Lanka Tour & Holiday Packages</h2>
-        <p className="text-gray-600 font-semibold">
-          The Wait is Over! Sri Lanka Reopened with Great Offers
-        </p>
+    <div className="min-h-screen bg-white">
+      {/* Title Section */}
+      <div className="text-center py-6 border-b">
+        <h1 className="text-2xl font-bold">Sri Lanka Tour & Holiday Packages</h1>
+        <p className="text-gray-600 mt-2">The Wait is Over! Sri Lanka Reopened with Great Offers</p>
       </div>
 
-      {/* View Your Booking Button */}
-      <div className="d-flex justify-content-end mb-5">
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={handleViewBooking}
-        >
-          View Your Booking
-        </button>
-      </div>
-
-      {/* Package Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {packages.map((pkg) => (
-          <div
-            key={pkg.id}
-            className="bg-white shadow-lg rounded-2xl overflow-hidden cursor-pointer"
-            onClick={() => handlePackageClick(pkg)}
-          >
-            <img src={pkg.image} alt={pkg.name} className="w-full h-52 object-cover" />
-            <div className="p-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-blue-600 flex items-center">
-                  <FaMapMarkerAlt className="mr-1" /> Sri Lanka
-                </span>
-              </div>
-              <h3 className="text-lg font-semibold">{pkg.name}</h3>
-              <p className="text-gray-500 text-sm mt-1">{pkg.duration}</p>
-              <p className="text-gray-500 text-sm mt-1">Starting From</p>
-              <p className="text-blue-600 font-bold">USD ${pkg.price}</p>
-            </div>
+      {/* Tour Duration and Date */}
+      <div className="container mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Tour Duration :</label>
+            <input
+              type="text"
+              className="mt-1 w-full p-2 bg-gray-100 border border-gray-300 rounded"
+              placeholder="Tour Duration"
+            />
           </div>
-        ))}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Travelling Date :</label>
+            <input
+              type="text"
+              className="mt-1 w-full p-2 bg-gray-100 border border-gray-300 rounded"
+              placeholder="Travelling Date"
+            />
+          </div>
+        </div>
       </div>
-      
+
+      {/* Tour Packages Grid */}
+      <div className="container mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold mb-6">Tour Packages</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {packages.map((pkg) => (
+            <div key={pkg.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
+              <div className="relative h-64">
+                <img
+                  src={pkg.image}
+                  alt={pkg.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="text-xl font-semibold text-center mb-2">{pkg.name}</h3>
+                <div className="flex items-center justify-center mb-4">
+                  <div className="flex mr-2">
+                    {renderStars(pkg.rating)}
+                  </div>
+                  <span className="text-lg font-semibold">{pkg.rating}</span>
+                </div>
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => handleMoreInformation(pkg.id)}
+                    className="bg-teal-600 text-white py-2 px-8 rounded-lg hover:bg-teal-700 transition duration-300 flex items-center justify-center"
+                  >
+                    More information <span className="ml-2">▶</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Detailed Package Modal */}
       {selectedPackage && (
         <div className="modal show" style={{ display: 'block', overflow: 'hidden' }} tabIndex="-1">
