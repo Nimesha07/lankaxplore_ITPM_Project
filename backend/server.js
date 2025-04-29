@@ -4,7 +4,10 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
+// Import routes
 const authRoutes = require("./routes/authRoutes");
+const packageRoutes = require("./routes/packageRoute");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 
@@ -17,7 +20,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoutes); // Authentication routes
+app.use("/api/packages", packageRoutes); // Package routes
+app.use("/api/reviews", reviewRoutes); // Review routes
 
 app.get("/", (req, res) => {
     res.send("MERN Backend Running");
