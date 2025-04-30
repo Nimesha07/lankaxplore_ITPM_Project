@@ -10,7 +10,11 @@ import Contact from "./pages/Contact";
 import SignupPage from "./pages/Signup";
 import LoginPage from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
-function App() {
+
+const AppContent = () => {
+  const location = useLocation();
+  const shouldShowNavbar = !['/login', '/signup', '/forgot-password'].includes(location.pathname);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {shouldShowNavbar && <Navbar />}
@@ -18,17 +22,15 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/signup" element={<SignupPage />}/>
-        <Route path="/login" element={<LoginPage />}/>
-        <Route path="/forgot-password" element={<ForgotPassword/>}/>
-
-
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </div>
   );
 };
 
-function App() {
+const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -37,6 +39,6 @@ function App() {
       </Router>
     </ThemeProvider>
   );
-}
+};
 
-export default App;
+export default App; 

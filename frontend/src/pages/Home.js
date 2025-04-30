@@ -8,26 +8,6 @@ import Footer from '../components/Footer';
 axios.defaults.withCredentials = true;
 
 // Components
-const NavigationBar = ({ onExperienceClick }) => (
-  <nav className="fixed top-0 left-0 right-0 h-20 flex justify-between items-center px-5 bg-transparent hover:bg-[#257180] transition-colors duration-300 z-50">
-    <div className="flex-shrink-0">
-      <img src="/assets/images/logo.png" alt="Logo" className="h-10 w-auto" />
-    </div>
-    <ul className="flex space-x-5">
-      <li><a href="#home" className="text-white hover:text-[#CB6040] transition-colors">Home</a></li>
-      <li><a href="#destinations" className="text-white hover:text-[#CB6040] transition-colors">Destinations</a></li>
-      <li><a href="#video" className="text-white hover:text-[#CB6040] transition-colors">Video</a></li>
-      <li><a href="#expert-advice" className="text-white hover:text-[#CB6040] transition-colors">Expert Advice</a></li>
-      <li><a href="#categories" className="text-white hover:text-[#CB6040] transition-colors">Categories</a></li>
-      <li><a href="#experience" className="text-white hover:text-[#CB6040] transition-colors">Experience</a></li>
-    </ul>
-    <div className="flex space-x-3">
-      <Link to="/login" className="px-4 py-2 bg-[#CB6040] text-white rounded hover:bg-[#FD8B51] transition-colors">Login</Link>
-      <Link to="/register" className="px-4 py-2 bg-[#CB6040] text-white rounded hover:bg-[#FD8B51] transition-colors">Sign Up</Link>
-    </div>
-  </nav>
-);
-
 const HeroSection = ({ destinations, searchQuery, setSearchQuery, handleSearch, showSearchResults, setShowSearchResults, searchSuggestions, handleSearchResultClick }) => (
   <motion.section
     id="home"
@@ -109,6 +89,7 @@ const HeroSection = ({ destinations, searchQuery, setSearchQuery, handleSearch, 
     </motion.div>
   </motion.section>
 );
+
 //Experience section
 
 const ExperienceSection = ({ reviews, activeReviewTab, setActiveReviewTab, averageRating }) => (
