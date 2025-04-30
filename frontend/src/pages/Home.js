@@ -109,6 +109,7 @@ const HeroSection = ({ destinations, searchQuery, setSearchQuery, handleSearch, 
     </motion.div>
   </motion.section>
 );
+//Experience section
 
 const ExperienceSection = ({ reviews, activeReviewTab, setActiveReviewTab, averageRating }) => (
   <motion.section 
