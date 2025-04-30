@@ -449,7 +449,7 @@ const Home = () => {
     };
   }, []);
 
-  // Filter destinations based on category and search query
+  // Filter destinations based on category and search query function
   const filteredDestinations = destinations.filter(destination => {
     const matchesSearch = !searchQuery || (
       destination.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
