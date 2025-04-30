@@ -1,10 +1,26 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const PackageController = require("../controllers/packageController"); // Path to PackageController
+const {
+  createPackage,
+  getAllPackages,
+  getPackageById,
+  updatePackage,
+  deletePackage
+} = require('../controllers/packageController');
 
-// Package routes
-router.get("/", PackageController.getAllPackages); // Get all packages
-router.get("/:id", PackageController.getPackageById); // Get one package by ID
-router.get("/:id/reviews", PackageController.getPackageReviews);
+// Create a new package
+router.post('/', createPackage);
+
+// Get all packages
+router.get('/', getAllPackages);
+
+// Get a single package by ID
+router.get('/:id', getPackageById);
+
+// Update a package
+router.put('/:id', updatePackage);
+
+// Delete a package
+router.delete('/:id', deletePackage);
 
 module.exports = router; 

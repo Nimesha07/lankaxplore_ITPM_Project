@@ -49,7 +49,7 @@ const Destinations = () => {
   const generateCatalog = () => {
     const doc = new jsPDF();
     
-    // Add cover page
+    // Add cover page 
     doc.setFontSize(32);
     doc.setTextColor(255, 99, 71); // Tomato color
     doc.text('LankaXplore', 105, 50, { align: 'center' });
@@ -128,7 +128,7 @@ const Destinations = () => {
       doc.line(20, detailY + 50, 190, detailY + 50);
     });
 
-    // Save the PDF
+    // Save the PDF: Pdf generator 
     doc.save('lankaxplore_destination_catalog.pdf');
   };
 

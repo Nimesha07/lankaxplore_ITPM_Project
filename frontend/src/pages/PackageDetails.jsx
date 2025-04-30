@@ -1,155 +1,186 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { 
-  Container, 
-  Typography, 
-  Box, 
-  CircularProgress, 
-  Grid, 
-  Card, 
-  CardContent,
-  Divider
-} from '@mui/material';
-import AddReviewForm from '../components/AddReviewForm';
-import ReviewList from '../components/ReviewList';
-import ReviewAnalytics from '../components/ReviewAnalytics';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { FaHotel, FaUtensils, FaCar, FaClock } from 'react-icons/fa';
 
 const PackageDetails = () => {
-  const { id } = useParams();
-  const [packageData, setPackageData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [currentDay, setCurrentDay] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  useEffect(() => {
-    const fetchPackageDetails = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5001/api/packages/${id}`, {
-          withCredentials: true
-        });
-        setPackageData(response.data);
-      } catch (error) {
-        console.error('Error fetching package details:', error);
-        setError('Failed to load package details');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPackageDetails();
-  }, [id]);
-
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Typography color="error" align="center">
-        {error}
-      </Typography>
-    );
-  }
+  const packageData = location.state?.package;
 
   if (!packageData) {
+    navigate('/');
     return null;
   }
 
-  // Default image if none is provided
-  const defaultImage = "https://placehold.co/600x400?text=No+Image+Available";
-  const displayImage = packageData.image || defaultImage;
+  const nextImage = () => {
+    if (packageData.days[currentDay].highlights.length > 0) {
+      setCurrentImageIndex((prev) => 
+        (prev + 1) % packageData.days[currentDay].highlights.length
+      );
+    }
+  };
+
+  const prevImage = () => {
+    if (packageData.days[currentDay].highlights.length > 0) {
+      setCurrentImageIndex((prev) => 
+        prev === 0 ? packageData.days[currentDay].highlights.length - 1 : prev - 1
+      );
+    }
+  };
 
   return (
-    <Container maxWidth="lg" className="py-8">
-      <Grid container spacing={4}>
-        {/* Package Image and Basic Info */}
-        <Grid item xs={12} md={6}>
-          <img 
-            src={displayImage}
-            alt={packageData.name}
-            className="w-full h-64 object-cover rounded-lg"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = defaultImage;
-            }}
-          />
-          <Typography variant="h4" className="mt-4">
-            {packageData.name}
-          </Typography>
-          <Typography variant="subtitle1" color="textSecondary">
-            {packageData.location}
-          </Typography>
-          <Typography variant="body1" className="mt-2">
-            {packageData.description}
-          </Typography>
-          <Box className="mt-4">
-            <Typography variant="h6">Features</Typography>
-            <ul className="list-disc list-inside">
-              {packageData.features?.map((feature, index) => (
-                <li key={index}>{feature}</li>
-              )) || <li>No features available</li>}
-            </ul>
-          </Box>
-        </Grid>
+    <div className="min-h-screen bg-gray-100 py-8">
+      <div className="container mx-auto px-4">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">{packageData.name}</h1>
+            <div className="text-xl font-semibold text-indigo-600">
+              ${packageData.price}
+            </div>
+          </div>
 
-        {/* Package Details and Reviews */}
-        <Grid item xs={12} md={6}>
-          <Card className="mb-4">
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Package Details
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="textSecondary">
-                    Duration
-                  </Typography>
-                  <Typography variant="body1">
-                    {packageData.duration} days
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="textSecondary">
-                    Price
-                  </Typography>
-                  <Typography variant="h6" color="primary">
-                    ${packageData.price}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
+          <div className="mb-6">
+            <img
+              src={packageData.image}
+              alt={packageData.name}
+              className="w-full h-96 object-cover rounded-lg"
+            />
+          </div>
 
-          {/* Combined Reviews Section */}
-          <Card>
-            <CardContent>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="h6">
-                  Reviews
-                </Typography>
-                <AddReviewForm packageId={id} />
-              </Box>
-              
-              <Divider className="mb-4" />
-              
-              {/* Analytics and Reviews in one section */}
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <ReviewAnalytics packageId={id} />
-                </Grid>
-                <Grid item xs={12}>
-                  <ReviewList packageId={id} />
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </Container>
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">Package Overview</h2>
+            <p className="text-gray-600">{packageData.description}</p>
+          </div>
+
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold mb-4">Itinerary</h2>
+            
+            {/* Day Navigation */}
+            <div className="flex justify-center space-x-4 mb-6">
+              {packageData.days.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setCurrentDay(index);
+                    setCurrentImageIndex(0);
+                  }}
+                  className={`px-4 py-2 rounded-md ${
+                    currentDay === index
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-gray-200 text-gray-700'
+                  }`}
+                >
+                  Day {index + 1}
+                </button>
+              ))}
+            </div>
+
+            {/* Current Day Details */}
+            {packageData.days[currentDay] && (
+              <div className="space-y-6">
+                {/* Image Slider */}
+                {packageData.days[currentDay].highlights.length > 0 && (
+                  <div className="relative">
+                    <img
+                      src={packageData.days[currentDay].highlights[currentImageIndex]}
+                      alt={`Day ${currentDay + 1} highlight`}
+                      className="w-full h-96 object-cover rounded-lg"
+                    />
+                    <button
+                      onClick={prevImage}
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md"
+                    >
+                      ❮
+                    </button>
+                    <button
+                      onClick={nextImage}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md"
+                    >
+                      ❯
+                    </button>
+                  </div>
+                )}
+
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Description</h3>
+                  <p className="text-gray-600">
+                    {packageData.days[currentDay].description}
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Place</h3>
+                  <p className="text-gray-600">
+                    {packageData.days[currentDay].place}
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Activities</h3>
+                  <ul className="list-disc list-inside text-gray-600">
+                    {packageData.days[currentDay].activities.split(',').map((activity, index) => (
+                      <li key={index}>{activity.trim()}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="flex items-center space-x-2">
+                    <FaHotel className="text-indigo-600" />
+                    <div>
+                      <h4 className="font-semibold">Accommodation</h4>
+                      <p className="text-gray-600">{packageData.days[currentDay].accommodation}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <FaUtensils className="text-indigo-600" />
+                    <div>
+                      <h4 className="font-semibold">Meal Plan</h4>
+                      <p className="text-gray-600">{packageData.days[currentDay].mealPlan}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <FaClock className="text-indigo-600" />
+                    <div>
+                      <h4 className="font-semibold">Travel Time</h4>
+                      <p className="text-gray-600">{packageData.days[currentDay].travelTime}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <FaCar className="text-indigo-600" />
+                    <div>
+                      <h4 className="font-semibold">Transfer Mode</h4>
+                      <p className="text-gray-600">{packageData.days[currentDay].transferMode}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="flex justify-end space-x-4">
+            <button
+              onClick={() => navigate('/')}
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            >
+              Back to Packages
+            </button>
+            <button
+              onClick={() => navigate('/book', { state: { package: packageData } })}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+            >
+              Book Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -7,6 +7,12 @@ require("dotenv").config();
 
 // Import routes
 const authRoutes = require("./routes/authRoutes");
+const packageRoutes = require("./routes/packageRoute");
+const reviewRoutes = require("./routes/reviewRoutes");
+const destinationRoutes = require("./routes/destinationRoutes");
+const userRoutes = require('./routes/userRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
+const activityRoutes = require('./routes/activityRoutes');
 
 const app = express();
 
@@ -33,7 +39,44 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoutes); // Authentication routes
+app.use("/api/packages", packageRoutes); // Package routes
+app.use("/api/reviews", reviewRoutes); // Review routes
+app.use("/api/destinations", destinationRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/activities', activityRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    err.statusCode = err.statusCode || 500;
+    err.status = err.status || 'error';
+
+    if (process.env.NODE_ENV === 'development') {
+        res.status(err.statusCode).json({
+            status: err.status,
+            error: err,
+            message: err.message,
+            stack: err.stack
+        });
+    } else {
+        // Production mode
+        if (err.isOperational) {
+            // Operational, trusted error: send message to client
+            res.status(err.statusCode).json({
+                status: err.status,
+                message: err.message
+            });
+        } else {
+            // Programming or other unknown error: don't leak error details
+            console.error('ERROR 💥', err);
+            res.status(500).json({
+                status: 'error',
+                message: 'Something went wrong!'
+            });
+        }
+    }
+});
 
 app.get("/", (req, res) => {
     res.send("MERN Backend Running");

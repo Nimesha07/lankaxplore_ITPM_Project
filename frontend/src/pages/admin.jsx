@@ -1,7 +1,9 @@
 import { useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "./firebaseConfig";
 const AddPackage = () => {
+  const [imageurl, setImageurl] = useState(null);
   const [packageDetails, setPackageDetails] = useState({
     packageName: "",
     startingPrice: "",
@@ -56,10 +58,48 @@ const AddPackage = () => {
     setPackageDetails({ ...packageDetails, days: updatedDays });
   };
 
-  const handleFileUpload = (index, field, files) => {
+  const handleFileUpload = async (index, field, files) => {
     const updatedDays = [...packageDetails.days];
-    updatedDays[index][field] = Array.from(files);
-    setPackageDetails({ ...packageDetails, days: updatedDays });
+    const fileArray = Array.from(files);
+    
+    // Upload each file to Firebase and get URLs
+    const uploadPromises = fileArray.map(async (file) => {
+      const storageRef = ref(storage, `packages/${Date.now()}_${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      
+      return new Promise((resolve, reject) => {
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+            console.log("Upload progress:", progress + "%");
+          },
+          (error) => {
+            console.error(error.message);
+            reject(error.message);
+          },
+          async () => {
+            try {
+              const url = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve(url);
+            } catch (error) {
+              reject(error);
+            }
+          }
+        );
+      });
+    });
+
+    try {
+      const urls = await Promise.all(uploadPromises);
+      updatedDays[index][field] = urls;
+      setPackageDetails({ ...packageDetails, days: updatedDays });
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      alert("Failed to upload files. Please try again.");
+    }
   };
 
   const validateForm = () => {
@@ -105,7 +145,7 @@ const AddPackage = () => {
           name: packageDetails.packageName,
           price: parseFloat(packageDetails.startingPrice),
           duration: `${packageDetails.days.length} Days / ${packageDetails.days.length - 1} Nights`,
-          description: packageDetails.days[0].description, // Using first day's description as package description
+          description: packageDetails.days[0].description,
           image: packageDetails.days[0].packageImages[0], // Using first image as package image
           days: packageDetails.days.map((day, index) => ({
             day: index + 1,
@@ -115,36 +155,49 @@ const AddPackage = () => {
             accommodation: day.accommodation,
             mealPlan: day.mealPlan,
             travelTime: day.travelTime,
-            transferMode: day.transferMode
+            transferMode: day.transferMode,
+            packageImages: day.packageImages // Now contains Firebase URLs
           }))
         };
+console.log(packageDetails)
+        // Make API call to save the package
+        const response = await fetch('http://localhost:5001/api/packages/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(packageDetails),
+        });
 
-        // Here you would typically make an API call to save the package
-        console.log("Package Details Submitted:", formattedPackage);
+        if (!response.ok) {
+          throw new Error('Failed to save package');
+        }
+
+        const data = await response.json();
+        console.log("Package saved successfully:", data);
         
         // Show success message
         alert("Package added successfully!");
         
         // Reset form
-        setPackageDetails({
-          packageName: "",
-          startingPrice: "",
-          groupSize: "",
-          days: [
-            {
-              description: "",
-              packageImages: [],
-              activities: "",
-              highlights: [],
-              accommodation: "",
-              mealPlan: "",
-              travelTime: "",
-              transferMode: "",
-            },
-          ],
-        });
+        // setPackageDetails({
+        //   packageName: "",
+        //   startingPrice: "",
+        //   groupSize: "",
+        //   days: [
+        //     {
+        //       description: "",
+        //       packageImages: [],
+        //       activities: "",
+        //       highlights: [],
+        //       accommodation: "",
+        //       mealPlan: "",
+        //       travelTime: "",
+        //       transferMode: "",
+        //     },
+        //   ],
+        // });
         
-        // Clear errors
         setErrors({});
         
       } catch (error) {
@@ -153,7 +206,44 @@ const AddPackage = () => {
       }
     }
   };
+  const handleUploadImage = async () => {
+    if (imageurl) {
+      const pdfFile = imageurl;
+      console.log(pdfFile);
 
+      const storageRef = ref(storage, pdfFile.name);
+      const uploadTask = uploadBytesResumable(storageRef, pdfFile);
+
+      return new Promise((resolve, reject) => {
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress1 = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+            console.log("Upload progress:", progress1 + "%");
+          },
+          (error) => {
+            console.error(error.message);
+            reject(error.message);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref)
+              .then((url) => {
+                console.log("File uploaded successfully. URL:", url);
+                resolve(url); // Resolve the Promise with the URL
+              })
+              .catch((error) => {
+                console.error(error.message);
+                reject(error.message);
+              });
+          }
+        );
+      });
+    } else {
+      return "";
+    }
+  };
   return (
     <div className="container mt-5" style={{ maxWidth: "1200px", margin: "0 auto" }}>
       <h2 className="text-center mb-4" style={{ fontFamily: "'Arial', sans-serif", fontSize: "2rem", color: "#333" }}>Add New Package</h2>

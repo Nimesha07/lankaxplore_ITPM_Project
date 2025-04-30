@@ -10,10 +10,24 @@ import Contact from "./pages/Contact";
 import SignupPage from "./pages/Signup";
 import LoginPage from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
+import PackageDetails from "./pages/PackageDetails";
+import DestinationDetails from "./pages/DestinationDetails";
+import UserProfile from "./pages/UserProfile";
+import Destinations from "./pages/Destinations";
+import Experiences from "./pages/Experiences";
+import Dashboard from "./pages/dashboard";
+import Admin from "./pages/admin";
+import Book from "./pages/book";
+import Details from "./pages/details";
+import Edit from "./pages/edit";
+import AdminEdit from "./pages/adminEdit";
+import AdminView from "./pages/adminView";
 
+// Create a wrapper component to handle Navbar visibility
 const AppContent = () => {
   const location = useLocation();
-  const shouldShowNavbar = !['/login', '/signup', '/forgot-password'].includes(location.pathname);
+  const authRoutes = ['/login', '/signup', '/forgot-password'];
+  const shouldShowNavbar = !authRoutes.includes(location.pathname);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -25,12 +39,24 @@ const AppContent = () => {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/packages/:id" element={<PackageDetails />} />
+        <Route path="/destinations" element={<Destinations />} />
+        <Route path="/destinations/:id" element={<DestinationDetails />} />
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/experiences" element={<Experiences />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/book" element={<Book />} />
+        <Route path="/details" element={<Details />} />
+        <Route path="/edit" element={<Edit />} />
+        <Route path="/adminEdit" element={<AdminEdit />} />
+        <Route path="/adminView" element={<AdminView />} />
       </Routes>
     </div>
   );
 };
 
-const App = () => {
+function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -39,6 +65,6 @@ const App = () => {
       </Router>
     </ThemeProvider>
   );
-};
+}
 
-export default App; 
+export default App;

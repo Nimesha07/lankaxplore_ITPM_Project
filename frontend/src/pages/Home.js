@@ -8,6 +8,26 @@ import Footer from '../components/Footer';
 axios.defaults.withCredentials = true;
 
 // Components
+const NavigationBar = ({ onExperienceClick }) => (
+  <nav className="fixed top-0 left-0 right-0 h-20 flex justify-between items-center px-5 bg-transparent hover:bg-[#257180] transition-colors duration-300 z-50">
+    <div className="flex-shrink-0">
+      <img src="/assets/images/logo.png" alt="Logo" className="h-10 w-auto" />
+    </div>
+    <ul className="flex space-x-5">
+      <li><a href="#home" className="text-white hover:text-[#CB6040] transition-colors">Home</a></li>
+      <li><a href="#destinations" className="text-white hover:text-[#CB6040] transition-colors">Destinations</a></li>
+      <li><a href="#video" className="text-white hover:text-[#CB6040] transition-colors">Video</a></li>
+      <li><a href="#expert-advice" className="text-white hover:text-[#CB6040] transition-colors">Expert Advice</a></li>
+      <li><a href="#categories" className="text-white hover:text-[#CB6040] transition-colors">Categories</a></li>
+      <li><a href="#experience" className="text-white hover:text-[#CB6040] transition-colors">Experience</a></li>
+    </ul>
+    <div className="flex space-x-3">
+      <Link to="/login" className="px-4 py-2 bg-[#CB6040] text-white rounded hover:bg-[#FD8B51] transition-colors">Login</Link>
+      <Link to="/register" className="px-4 py-2 bg-[#CB6040] text-white rounded hover:bg-[#FD8B51] transition-colors">Sign Up</Link>
+    </div>
+  </nav>
+);
+
 const HeroSection = ({ destinations, searchQuery, setSearchQuery, handleSearch, showSearchResults, setShowSearchResults, searchSuggestions, handleSearchResultClick }) => (
   <motion.section
     id="home"
@@ -89,7 +109,6 @@ const HeroSection = ({ destinations, searchQuery, setSearchQuery, handleSearch, 
     </motion.div>
   </motion.section>
 );
-
 //Experience section
 
 const ExperienceSection = ({ reviews, activeReviewTab, setActiveReviewTab, averageRating }) => (
@@ -269,7 +288,7 @@ const CategoriesSection = ({ destinations, selectedFilter, handleFilterClick }) 
     </div>
   </motion.section>
 );
-
+//Video section
 const VideoSection = () => (
   <motion.section 
     id="video" 
@@ -293,22 +312,18 @@ const VideoSection = () => (
       </div>
       <div className="w-full md:w-1/2 text-lg text-gray-700">
         <p className="leading-relaxed">
-          "We are your ultimate travel companions, dedicated to unlocking 
-          the wonders of Sri Lanka with innovation and passion. From breathtaking 
-          beaches and lush landscapes to thrilling adventures and cultural treasures, we craft
-          personalized travel experiences for every adventurer.
-
-          Our AI weather based activity planner, curated travel packages, and real-time 
-          destination insights, ensuring an unforgettable journey. Whether you're a solo explorer, 
-          a family on vacation, or a group of thrill-seekers, we're here to guide you every step of the way.
-
-          Let's embark on an adventure where every moment counts!"
+        <h1><strong>Welcome to Your Ultimate Travel Partner!</strong></h1>
+"We're here to turn your dream getaway into reality—where stunning beaches, vibrant culture, 
+and thrilling adventures meet innovation. Our smart, AI-powered weather-based activity planner, 
+handpicked travel packages, and real-time insights help you experience every hidden gem with ease. 
+Whether you're traveling solo, with family, or in a fun-loving group, we personalize every detail to match your vibe.
+Get ready for a journey where every moment becomes a story worth telling!"
         </p>
       </div>
     </div>
   </motion.section>
 );
-
+//Expert advice section
 const ExpertAdviceSection = ({ destinations }) => (
   <motion.section 
     id="expert-advice" 
@@ -335,6 +350,7 @@ const ExpertAdviceSection = ({ destinations }) => (
   </motion.section>
 );
 
+//Main Home component
 const Home = () => {
   const navigate = useNavigate();
   const [destinations, setDestinations] = useState([]);
@@ -429,7 +445,7 @@ const Home = () => {
     };
   }, []);
 
-  // Filter destinations based on category and search query
+  // Filter destinations based on category and search query function
   const filteredDestinations = destinations.filter(destination => {
     const matchesSearch = !searchQuery || (
       destination.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
