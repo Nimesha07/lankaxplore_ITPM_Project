@@ -1,22 +1,19 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from './theme/theme';
+import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import SignupPage from "./pages/Signup";
 import LoginPage from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
-import Dashboard from "./pages/dashboard";
-import Admin from "./pages/admin";
-import AdminEdit from "./pages/adminEdit.tsx";
-import AdminDelete from "./pages/adminDelete.tsx";
-import Book from "./pages/book";
-import Edit from "./pages/edit";
-import Details from "./pages/details";
-
 function App() {
   return (
-    <Router>
+    <div className="min-h-screen bg-gray-50">
+      {shouldShowNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -24,16 +21,21 @@ function App() {
         <Route path="/signup" element={<SignupPage />}/>
         <Route path="/login" element={<LoginPage />}/>
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
-        <Route path="/dashboard" element={<Dashboard/>}/>
-        <Route path="/admin" element={<Admin/>}/>
-        <Route path="/edit/:id" element={<AdminEdit/>}/>
-        <Route path="/book" element={<Book/>}/>
-        <Route path="/edit" element={<Edit/>}/>
-        <Route path="/details" element={<Details/>}/>
-        <Route path="/adminEdit" element={<AdminEdit/>}/>
-        <Route path="/adminDelete" element={<AdminDelete/>}/>
+
+
       </Routes>
-    </Router>
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <AppContent />
+      </Router>
+    </ThemeProvider>
   );
 }
 
