@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
+const packageRoutes = require("./routes/packageRoutes");
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/packages", packageRoutes);
 
 app.get("/", (req, res) => {
     res.send("MERN Backend Running");

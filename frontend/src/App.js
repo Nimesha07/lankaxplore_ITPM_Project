@@ -8,9 +8,12 @@ import LoginPage from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/dashboard";
 import Admin from "./pages/admin";
+import AdminEdit from "./pages/adminEdit.tsx";
+import AdminDelete from "./pages/adminDelete.tsx";
 import Book from "./pages/book";
 import Edit from "./pages/edit";
 import Details from "./pages/details";
+
 function App() {
   return (
     <Router>
@@ -23,11 +26,12 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/admin" element={<Admin/>}/>
+        <Route path="/edit/:id" element={<AdminEdit/>}/>
         <Route path="/book" element={<Book/>}/>
         <Route path="/edit" element={<Edit/>}/>
         <Route path="/details" element={<Details/>}/>
-
-
+        <Route path="/adminEdit" element={<AdminEdit/>}/>
+        <Route path="/adminDelete" element={<AdminDelete/>}/>
       </Routes>
     </Router>
   );

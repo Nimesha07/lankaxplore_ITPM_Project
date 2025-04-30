@@ -1,8 +1,12 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useLocation } from "react-router-dom";
 
 const BookingPage = () => {
+  const location = useLocation();
+  const selectedPackage = location.state?.package;
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -53,6 +57,31 @@ const BookingPage = () => {
         >
           Book Your Travel Package
         </h1>
+
+        {/* Selected Package Information */}
+        {selectedPackage && (
+          <div style={{
+            backgroundColor: "#f8f9fa",
+            padding: "20px",
+            borderRadius: "8px",
+            marginBottom: "30px",
+            border: "1px solid #e9ecef"
+          }}>
+            <h2 style={{
+              color: "#4CAF50",
+              fontSize: "24px",
+              marginBottom: "10px",
+              fontWeight: "bold"
+            }}>
+              Selected Package: {selectedPackage.name}
+            </h2>
+            <div style={{ color: "#666" }}>
+              <p><strong>Duration:</strong> {selectedPackage.duration}</p>
+              <p><strong>Price:</strong> {selectedPackage.price}</p>
+              <p><strong>Description:</strong> {selectedPackage.description}</p>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={formik.handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ marginBottom: "20px" }}>

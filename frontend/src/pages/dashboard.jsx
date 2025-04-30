@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaMapMarkerAlt, FaHotel, FaUtensils, FaCar, FaClock, FaStar, FaRegStar, FaEdit, FaTrash } from "react-icons/fa";
+import {FaHotel, FaUtensils, FaCar, FaClock, FaStar, FaRegStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -17,8 +17,7 @@ const packages = [
     id: 1,
     name: "Tour Package 3 Days",
     price: 675,
-    image: "/assets/images/3day.jpg",
-    image1: "/assets/images/3dayin.jpg",
+    image: "/assets/images/4day.jpg",
     description: "A beautiful 3-day tour that takes you through the heart of Sri Lanka's rich culture and natural beauty.",
     duration: "3 Days / 2 Nights",
     days: [
@@ -36,23 +35,32 @@ const packages = [
         day: 2,
         description: "Discover the cultural triangle and ancient ruins",
         activities: "Visit Polonnaruwa Ancient City, Explore Minneriya National Park",
-        highlights: ["/assets/images/polonnaruwa.jpg", "/assets/images/minneriyajeep.jpg"],
+        highlights: ["/assets/images/4day.jpg", "/assets/images/minneriyajeep.jpg"],
         accommodation: "Heritance Kandalama Hotel",
         mealPlan: "Breakfast, Lunch, Dinner",
         travelTime: "3 hours",
         transferMode: "Air-conditioned vehicle"
       },
-
+      {
+        day: 3,
+        description: "Experience the cultural heritage of Kandy",
+        activities: "Visit Temple of the Sacred Tooth Relic, Cultural Dance Performance, City Tour",
+        highlights: ["/assets/images/kandy.jpg", "/assets/images/temple.jpg"],
+        accommodation: "Heritance Kandalama Hotel",
+        mealPlan: "Breakfast, Lunch, Dinner",
+        travelTime: "2 hours",
+        transferMode: "Air-conditioned vehicle"
+      }
     ]
   },
   {
     id: 2,
-    name: "2 Days of Blissful Eid",
+    name: "Tour Package 2 Days",
     price: 900,
     image: "/assets/images/10day.jpg",
     image1: "/assets/images/3dayin.jpg",
-    description: "A 7-day package during Eid, offering blissful moments, great food, and unforgettable experiences.",
-    duration: "2 Days / 1 Nights",
+    description: "Experience a blissful 2-day tour with one night stay, offering great food and unforgettable experiences.",
+    duration: "2 Days / 1 Night",
     days: [
       {
         day: 1,
@@ -64,6 +72,16 @@ const packages = [
         travelTime: "1 hour",
         transferMode: "Air-conditioned vehicle"
       },
+      {
+        day: 2,
+        description: "City exploration and cultural experience",
+        activities: "City tour, Visit to historic sites, Evening cultural show",
+        highlights: ["/assets/images/colombo.jpg", "/assets/images/cultural.jpg"],
+        accommodation: "Check-out after breakfast",
+        mealPlan: "Breakfast, Lunch",
+        travelTime: "30 minutes",
+        transferMode: "Air-conditioned vehicle"
+      }
     ]
   },
 ];
@@ -74,20 +92,24 @@ const TourPackages = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const navigate = useNavigate();
 
-  const handlePackageClick = (pkg) => {
-    setSelectedPackage(pkg);
-    setCurrentDay(0);
-    setCurrentImageIndex(0);
-  };
-
   const handleBookNow = () => {
     if (selectedPackage) {
-      navigate("/book", { state: { package: selectedPackage } });
+      const packageData = {
+        name: selectedPackage.name,
+        duration: selectedPackage.duration,
+        price: selectedPackage.price,
+        description: selectedPackage.description,
+        days: selectedPackage.days.map(day => ({
+          description: day.description,
+          activities: day.activities,
+          accommodation: day.accommodation,
+          mealPlan: day.mealPlan,
+          travelTime: day.travelTime,
+          transferMode: day.transferMode
+        }))
+      };
+      navigate("/book", { state: { package: packageData } });
     }
-  };
-
-  const handleViewBooking = () => {
-    navigate("/view-booking", { state: { package: selectedPackage } });
   };
 
   const nextImage = () => {
@@ -123,15 +145,6 @@ const TourPackages = () => {
     return stars;
   };
 
-  const handleEditPackage = (id) => {
-    navigate(`/edit-package/${id}`);
-  };
-
-  const handleDeletePackage = (id) => {
-    // Implement delete functionality
-    console.log('Delete package:', id);
-  };
-
   const handleMoreInformation = (id) => {
     const selectedPkg = packages.find(pkg => pkg.id === id);
     navigate('/details', { state: { package: selectedPkg } });
@@ -143,28 +156,6 @@ const TourPackages = () => {
       <div className="text-center py-6 border-b">
         <h1 className="text-2xl font-bold">Sri Lanka Tour & Holiday Packages</h1>
         <p className="text-gray-600 mt-2">The Wait is Over! Sri Lanka Reopened with Great Offers</p>
-      </div>
-
-      {/* Tour Duration and Date */}
-      <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Tour Duration :</label>
-            <input
-              type="text"
-              className="mt-1 w-full p-2 bg-gray-100 border border-gray-300 rounded"
-              placeholder="Tour Duration"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Travelling Date :</label>
-            <input
-              type="text"
-              className="mt-1 w-full p-2 bg-gray-100 border border-gray-300 rounded"
-              placeholder="Travelling Date"
-            />
-          </div>
-        </div>
       </div>
 
       {/* Tour Packages Grid */}
@@ -224,7 +215,10 @@ const TourPackages = () => {
                 <div className="mb-4">
                   <h6 className="text-muted">Package Overview</h6>
                   <p>{selectedPackage.description}</p>
-                  <p className="font-bold">Price: USD ${selectedPackage.price}</p>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <p className="font-bold">Price: USD ${selectedPackage.price}</p>
+                    <p className="text-muted">{selectedPackage.duration}</p>
+                  </div>
                 </div>
 
                 {/* Day Navigation */}
