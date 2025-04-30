@@ -49,7 +49,7 @@ const Destinations = () => {
   const generateCatalog = () => {
     const doc = new jsPDF();
     
-    // Add cover page
+    // Add cover page 
     doc.setFontSize(32);
     doc.setTextColor(255, 99, 71); // Tomato color
     doc.text('LankaXplore', 105, 50, { align: 'center' });
