@@ -244,6 +244,7 @@ const ExperienceSection = ({ reviews, activeReviewTab, setActiveReviewTab, avera
   </motion.section>
 );
 
+//Categories section
 const CategoriesSection = ({ destinations, selectedFilter, handleFilterClick }) => (
   <motion.section 
     id="categories" 
