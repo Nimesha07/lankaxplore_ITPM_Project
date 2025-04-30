@@ -288,7 +288,7 @@ const CategoriesSection = ({ destinations, selectedFilter, handleFilterClick }) 
     </div>
   </motion.section>
 );
-
+//Video section
 const VideoSection = () => (
   <motion.section 
     id="video" 
