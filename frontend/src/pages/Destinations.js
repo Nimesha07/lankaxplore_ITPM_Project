@@ -128,7 +128,7 @@ const Destinations = () => {
       doc.line(20, detailY + 50, 190, detailY + 50);
     });
 
-    // Save the PDF
+    // Save the PDF: Pdf generator 
     doc.save('lankaxplore_destination_catalog.pdf');
   };
 
