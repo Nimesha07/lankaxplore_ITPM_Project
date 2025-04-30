@@ -312,8 +312,8 @@ const VideoSection = () => (
       </div>
       <div className="w-full md:w-1/2 text-lg text-gray-700">
         <p className="leading-relaxed">
-          "Discover Sri Lanka like never before with your ultimate travel partner!
-We're here to turn your dream getaway into reality—where stunning beaches, vibrant culture, 
+        <h1>Welcome to Your Ultimate Travel Partner!</h1>
+"We're here to turn your dream getaway into reality—where stunning beaches, vibrant culture, 
 and thrilling adventures meet innovation. Our smart, AI-powered weather-based activity planner, 
 handpicked travel packages, and real-time insights help you experience every hidden gem with ease. 
 Whether you're traveling solo, with family, or in a fun-loving group, we personalize every detail to match your vibe.
