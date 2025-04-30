@@ -327,7 +327,7 @@ const VideoSection = () => (
     </div>
   </motion.section>
 );
-
+//Expert advice section
 const ExpertAdviceSection = ({ destinations }) => (
   <motion.section 
     id="expert-advice" 
