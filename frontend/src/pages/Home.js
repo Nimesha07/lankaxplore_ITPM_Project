@@ -354,6 +354,7 @@ const ExpertAdviceSection = ({ destinations }) => (
   </motion.section>
 );
 
+//Main Home component
 const Home = () => {
   const navigate = useNavigate();
   const [destinations, setDestinations] = useState([]);
