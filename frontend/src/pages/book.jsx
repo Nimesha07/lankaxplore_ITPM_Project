@@ -1,10 +1,12 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const BookingPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const selectedPackage = location.state?.package;
 
   const formik = useFormik({
@@ -26,9 +28,38 @@ const BookingPage = () => {
       guests: Yup.number().min(1, "At least one guest required").required("Number of guests is required"),
       date: Yup.string().required("Please select a date"),
     }),
-    onSubmit: (values) => {
-      alert("Booking Successful!");
-      console.log(values);
+    onSubmit: async (values) => {
+      try {
+        const bookingData = {
+          ...values,
+          packageId: selectedPackage.packageId,
+          packageName: selectedPackage.name,
+          packagePrice: selectedPackage.price,
+          status: "confirmed",
+          createdAt: new Date().toISOString()
+        };
+
+        const response = await axios.post(
+          "http://localhost:5001/api/bookings",
+          bookingData,
+          { 
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+
+        if (response.data.success) {
+          alert("Booking Successful!");
+          navigate("/bookings"); // Redirect to bookings page
+        } else {
+          alert("Booking failed. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error creating booking:", error);
+        alert("An error occurred. Please try again.");
+      }
     },
   });
 
@@ -77,7 +108,7 @@ const BookingPage = () => {
             </h2>
             <div style={{ color: "#666" }}>
               <p><strong>Duration:</strong> {selectedPackage.duration}</p>
-              <p><strong>Price:</strong> {selectedPackage.price}</p>
+              <p><strong>Price:</strong> ${selectedPackage.price}</p>
               <p><strong>Description:</strong> {selectedPackage.description}</p>
             </div>
           </div>

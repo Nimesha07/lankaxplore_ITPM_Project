@@ -27,11 +27,11 @@ const TourPackageDetails = () => {
 
   const handleBookNow = () => {
     const packageData = {
-      name: "Tour Package 2 Days",
-      duration: "3 Days, 2Nights",
-      price: "US$ 300",
-      description:
-        "Experience the best of Sri Lanka with our 2-day tour package",
+      name: packages?.packageName,
+      duration: `${packages?.days?.length} Days`,
+      price: packages?.startingPrice,
+      description: packages?.description,
+      packageId: packages?._id
     };
     navigate("/book", { state: { package: packageData } });
   };

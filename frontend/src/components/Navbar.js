@@ -79,6 +79,14 @@ const Navbar = () => {
       path: '/destinations'
     },
     { 
+      label: 'Packages', 
+      path: '/dashboard'
+    },
+    { 
+      label: 'Booking', 
+      path: '/bookings'
+    },
+    { 
       label: 'Experiences', 
       path: '/experiences'
     },

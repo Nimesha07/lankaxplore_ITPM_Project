@@ -22,6 +22,7 @@ import Details from "./pages/details";
 import Edit from "./pages/edit";
 import AdminEdit from "./pages/adminEdit";
 import AdminView from "./pages/adminView";
+import UserBookings from './pages/UserBookings';
 
 // Create a wrapper component to handle Navbar visibility
 const AppContent = () => {
@@ -47,10 +48,11 @@ const AppContent = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/book" element={<Book />} />
-        <Route path="/details" element={<Details />} />
+        <Route path="/details/:id" element={<Details />} />
         <Route path="/edit" element={<Edit />} />
-        <Route path="/adminEdit" element={<AdminEdit />} />
+        <Route path="/adminEdit/:id" element={<AdminEdit />} />
         <Route path="/adminView" element={<AdminView />} />
+        <Route path="/bookings" element={<UserBookings />} />
       </Routes>
     </div>
   );

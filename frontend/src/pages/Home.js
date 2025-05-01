@@ -20,6 +20,7 @@ const NavigationBar = ({ onExperienceClick }) => (
       <li><a href="#expert-advice" className="text-white hover:text-[#CB6040] transition-colors">Expert Advice</a></li>
       <li><a href="#categories" className="text-white hover:text-[#CB6040] transition-colors">Categories</a></li>
       <li><a href="#experience" className="text-white hover:text-[#CB6040] transition-colors">Experience</a></li>
+      
     </ul>
     <div className="flex space-x-3">
       <Link to="/login" className="px-4 py-2 bg-[#CB6040] text-white rounded hover:bg-[#FD8B51] transition-colors">Login</Link>

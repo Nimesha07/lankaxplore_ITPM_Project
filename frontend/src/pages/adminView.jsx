@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {FaHotel, FaUtensils, FaCar, FaClock, FaStar, FaRegStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import axios from "axios";
 // Add custom CSS for hiding scrollbar
 // // const scrollbarStyle = {
 // //   '&::-webkit-scrollbar': {
@@ -12,87 +12,105 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 //   'scrollbarWidth': 'none'
 // };
 
-const packages = [
-  {
-    id: 1,
-    name: "Tour Package 3 Days",
-    price: 675,
-    image: "/assets/images/4day.jpg",
-    description: "A beautiful 3-day tour that takes you through the heart of Sri Lanka's rich culture and natural beauty.",
-    duration: "3 Days / 2 Nights",
-    days: [
-      {
-        day: 1,
-        description: "Explore the ancient city of Sigiriya and its magnificent rock fortress",
-        activities: "Climb Sigiriya Rock, Visit Dambulla Cave Temple, Cultural Dance Show",
-        highlights: ["/assets/images/seegeriya.jpg", "/assets/images/dambulle.jpg"],
-        accommodation: "Heritance Kandalama Hotel",
-        mealPlan: "Breakfast, Lunch, Dinner",
-        travelTime: "4 hours",
-        transferMode: "Air-conditioned vehicle"
-      },
-      {
-        day: 2,
-        description: "Discover the cultural triangle and ancient ruins",
-        activities: "Visit Polonnaruwa Ancient City, Explore Minneriya National Park",
-        highlights: ["/assets/images/4day.jpg", "/assets/images/minneriyajeep.jpg"],
-        accommodation: "Heritance Kandalama Hotel",
-        mealPlan: "Breakfast, Lunch, Dinner",
-        travelTime: "3 hours",
-        transferMode: "Air-conditioned vehicle"
-      },
-      {
-        day: 3,
-        description: "Experience the cultural heritage of Kandy",
-        activities: "Visit Temple of the Sacred Tooth Relic, Cultural Dance Performance, City Tour",
-        highlights: ["/assets/images/kandy.jpg", "/assets/images/temple.jpg"],
-        accommodation: "Heritance Kandalama Hotel",
-        mealPlan: "Breakfast, Lunch, Dinner",
-        travelTime: "2 hours",
-        transferMode: "Air-conditioned vehicle"
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: "Tour Package 2 Days",
-    price: 900,
-    image: "/assets/images/10day.jpg",
-    image1: "/assets/images/3dayin.jpg",
-    description: "Experience a blissful 2-day tour with one night stay, offering great food and unforgettable experiences.",
-    duration: "2 Days / 1 Night",
-    days: [
-      {
-        day: 1,
-        description: "Arrival and welcome ceremony",
-        activities: "Airport pickup, Welcome dinner, Hotel check-in",
-        highlights: ["/assets/images/colombo.jpg","/assets/images/galleface.jpg"],
-        accommodation: "Cinnamon Grand Colombo",
-        mealPlan: "Dinner",
-        travelTime: "1 hour",
-        transferMode: "Air-conditioned vehicle"
-      },
-      {
-        day: 2,
-        description: "City exploration and cultural experience",
-        activities: "City tour, Visit to historic sites, Evening cultural show",
-        highlights: ["/assets/images/colombo.jpg", "/assets/images/cultural.jpg"],
-        accommodation: "Check-out after breakfast",
-        mealPlan: "Breakfast, Lunch",
-        travelTime: "30 minutes",
-        transferMode: "Air-conditioned vehicle"
-      }
-    ]
-  },
-];
+// const packages = [
+//   {
+//     id: 1,
+//     name: "Tour Package 3 Days",
+//     price: 675,
+//     image: "/assets/images/4day.jpg",
+//     description: "A beautiful 3-day tour that takes you through the heart of Sri Lanka's rich culture and natural beauty.",
+//     duration: "3 Days / 2 Nights",
+//     days: [
+//       {
+//         day: 1,
+//         description: "Explore the ancient city of Sigiriya and its magnificent rock fortress",
+//         activities: "Climb Sigiriya Rock, Visit Dambulla Cave Temple, Cultural Dance Show",
+//         highlights: ["/assets/images/seegeriya.jpg", "/assets/images/dambulle.jpg"],
+//         accommodation: "Heritance Kandalama Hotel",
+//         mealPlan: "Breakfast, Lunch, Dinner",
+//         travelTime: "4 hours",
+//         transferMode: "Air-conditioned vehicle"
+//       },
+//       {
+//         day: 2,
+//         description: "Discover the cultural triangle and ancient ruins",
+//         activities: "Visit Polonnaruwa Ancient City, Explore Minneriya National Park",
+//         highlights: ["/assets/images/4day.jpg", "/assets/images/minneriyajeep.jpg"],
+//         accommodation: "Heritance Kandalama Hotel",
+//         mealPlan: "Breakfast, Lunch, Dinner",
+//         travelTime: "3 hours",
+//         transferMode: "Air-conditioned vehicle"
+//       },
+//       {
+//         day: 3,
+//         description: "Experience the cultural heritage of Kandy",
+//         activities: "Visit Temple of the Sacred Tooth Relic, Cultural Dance Performance, City Tour",
+//         highlights: ["/assets/images/kandy.jpg", "/assets/images/temple.jpg"],
+//         accommodation: "Heritance Kandalama Hotel",
+//         mealPlan: "Breakfast, Lunch, Dinner",
+//         travelTime: "2 hours",
+//         transferMode: "Air-conditioned vehicle"
+//       }
+//     ]
+//   },
+//   {
+//     id: 2,
+//     name: "Tour Package 2 Days",
+//     price: 900,
+//     image: "/assets/images/10day.jpg",
+//     image1: "/assets/images/3dayin.jpg",
+//     description: "Experience a blissful 2-day tour with one night stay, offering great food and unforgettable experiences.",
+//     duration: "2 Days / 1 Night",
+//     days: [
+//       {
+//         day: 1,
+//         description: "Arrival and welcome ceremony",
+//         activities: "Airport pickup, Welcome dinner, Hotel check-in",
+//         highlights: ["/assets/images/colombo.jpg","/assets/images/galleface.jpg"],
+//         accommodation: "Cinnamon Grand Colombo",
+//         mealPlan: "Dinner",
+//         travelTime: "1 hour",
+//         transferMode: "Air-conditioned vehicle"
+//       },
+//       {
+//         day: 2,
+//         description: "City exploration and cultural experience",
+//         activities: "City tour, Visit to historic sites, Evening cultural show",
+//         highlights: ["/assets/images/colombo.jpg", "/assets/images/cultural.jpg"],
+//         accommodation: "Check-out after breakfast",
+//         mealPlan: "Breakfast, Lunch",
+//         travelTime: "30 minutes",
+//         transferMode: "Air-conditioned vehicle"
+//       }
+//     ]
+//   },
+// ];
 
 const TourPackages = () => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [editingPackage, setEditingPackage] = useState(null);
   const [currentDay, setCurrentDay] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [packages, setPackageData] = useState(null);
   const navigate = useNavigate();
+  const fetchPackageDetails = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5001/api/packages/`,
+        {
+          withCredentials: true,
+        }
+      );
+      setPackageData(response.data);
+    } catch (error) {
+      console.error("Error fetching package details:", error);
+    }
+  };
+  useEffect(() => {
+    
 
+    fetchPackageDetails();
+  }, []);
   const handleBookNow = () => {
     if (selectedPackage) {
       const packageData = {
@@ -151,18 +169,19 @@ const TourPackages = () => {
     navigate('/details', { state: { package: selectedPkg } });
   };
 
-  const handleEdit = (pkg) => {
-    navigate('/adminEdit', { state: { package: pkg } });
+  const handleEdit = (id) => {
+    navigate(`/adminEdit/${id}`);
   };
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this package?')) {
-      // Here you would typically make an API call to delete the package
-      console.log("Package deleted:", id);
-      // Update the packages array after successful deletion
-      const updatedPackages = packages.filter(pkg => pkg.id !== id);
-      // In a real app, you would update the state or make an API call here
-    }
+    axios.delete(`http://localhost:5001/api/packages/${id}`, {
+      withCredentials: true,
+    })
+      .then(response => {
+        fetchPackageDetails();
+        console.log("Package deleted:", response.data);
+        // Refresh the package list after deletion}
+      })
   };
 
   const handleEditSubmit = (e) => {
@@ -192,17 +211,17 @@ const TourPackages = () => {
       <div className="container mx-auto px-4 py-8">
         <h2 className="text-2xl font-bold mb-6">Tour Packages</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {packages.map((pkg) => (
+          {packages?.map((pkg) => (
             <div key={pkg.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
               <div className="relative h-64">
                 <img
-                  src={pkg.image}
+                  src={pkg.days[0]?.packageImages}
                   alt={pkg.name}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="p-4">
-                <h3 className="text-xl font-semibold text-center mb-2">{pkg.name}</h3>
+                <h3 className="text-xl font-semibold text-center mb-2">{pkg.packageName}</h3>
                 <div className="flex items-center justify-center mb-4">
                   <div className="flex mr-2">
                     {renderStars(pkg.rating)}
@@ -217,13 +236,13 @@ const TourPackages = () => {
                     More information <span className="ml-2">▶</span>
                   </button> */}
                   <button
-                    onClick={() => handleEdit(pkg)}
+                    onClick={() => handleEdit(pkg._id)}
                     className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300"
                   >
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(pkg.id)}
+                    onClick={() => handleDelete(pkg._id)}
                     className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300"
                   >
                     Delete
