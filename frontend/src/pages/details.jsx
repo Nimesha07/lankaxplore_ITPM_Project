@@ -27,11 +27,11 @@ const TourPackageDetails = () => {
 
   const handleBookNow = () => {
     const packageData = {
+      _id: packages?._id,
       name: packages?.packageName,
-      duration: `${packages?.days?.length} Days`,
       price: packages?.startingPrice,
-      description: packages?.description,
-      packageId: packages?._id
+      duration: `${packages?.days?.length} Days`,
+      description: packages?.description
     };
     navigate("/book", { state: { package: packageData } });
   };

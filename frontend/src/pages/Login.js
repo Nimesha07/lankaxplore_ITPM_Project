@@ -109,8 +109,9 @@ export default function LoginPage() {
           {isSuccess && (
             <Typography variant="body2" color="primary" className="mb-4 text-center">
               Login Successful! Redirecting...
-            </Typography>
+            </Typography> 
           )}
+console.log("Login Successful!");
 
           <form onSubmit={handleSubmit}>
             <TextField

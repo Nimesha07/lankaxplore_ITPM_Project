@@ -1,63 +1,60 @@
 const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        type: String,
         required: true
     },
-    destination: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Destination',
-        required: true
-    },
-    activities: [{
-        activity: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Activity',
-            required: true
-        },
-        quantity: {
-            type: Number,
-            required: true,
-            min: 1
-        },
-        date: {
-            type: Date,
-            required: true
-        }
-    }],
-    totalAmount: {
+    phone: {
         type: Number,
         required: true,
         min: 0
     },
-    status: {
+    guests: {
         type: String,
-        enum: ['pending', 'confirmed', 'cancelled', 'completed'],
-        default: 'pending'
     },
-    paymentStatus: {
+    date: {
         type: String,
-        enum: ['pending', 'paid', 'refunded', 'failed'],
-        default: 'pending'
+    },
+    specialRequests: {
+        type: String,
     },
     paymentMethod: {
+        type: String
+    },
+    packageId: {
         type: String,
-        enum: ['credit_card', 'debit_card', 'paypal', 'bank_transfer'],
         required: true
     },
-    notes: {
-        type: String
-    }
+    packageName: {
+        type: String,
+        required: true
+    },
+    packagePrice: {
+        type: String,
+        required: true
+    },
+    status: {
+        type: String,
+        required: true
+    },
+    createdAt: {
+        type: String,
+        required: true
+    },
+    
+    
+    
+
 }, {
     timestamps: true
 });
-
-// Add indexes for faster queries
-bookingSchema.index({ user: 1 });
-bookingSchema.index({ destination: 1 });
-bookingSchema.index({ status: 1 });
-bookingSchema.index({ paymentStatus: 1 });
-
 module.exports = mongoose.model('Booking', bookingSchema); 

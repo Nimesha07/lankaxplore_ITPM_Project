@@ -10,6 +10,7 @@ const AddPackage = () => {
     groupSize: "",
     days: [
       {
+        place: "",
         description: "",
         packageImages: [],
         activities: "",
@@ -30,6 +31,7 @@ const AddPackage = () => {
       days: [
         ...prev.days,
         {
+          place: "",
           description: "",
           packageImages: [],
           activities: "",
@@ -122,6 +124,7 @@ const AddPackage = () => {
 
     // Validate each day
     packageDetails.days.forEach((day, index) => {
+      if (!day.place) newErrors[`place-${index}`] = "Place is required";
       if (!day.description) newErrors[`description-${index}`] = "Description is required";
       if (!day.activities) newErrors[`activities-${index}`] = "Activities are required";
       if (!day.accommodation) newErrors[`accommodation-${index}`] = "Accommodation is required";
@@ -149,6 +152,7 @@ const AddPackage = () => {
           image: packageDetails.days[0].packageImages[0], // Using first image as package image
           days: packageDetails.days.map((day, index) => ({
             day: index + 1,
+            place: day.place,
             description: day.description,
             activities: day.activities,
             highlights: day.highlights,
@@ -180,23 +184,24 @@ console.log(packageDetails)
         alert("Package added successfully!");
         
         // Reset form
-        // setPackageDetails({
-        //   packageName: "",
-        //   startingPrice: "",
-        //   groupSize: "",
-        //   days: [
-        //     {
-        //       description: "",
-        //       packageImages: [],
-        //       activities: "",
-        //       highlights: [],
-        //       accommodation: "",
-        //       mealPlan: "",
-        //       travelTime: "",
-        //       transferMode: "",
-        //     },
-        //   ],
-        // });
+        setPackageDetails({
+          packageName: "",
+          startingPrice: "",
+          groupSize: "",
+          days: [
+            {
+              place: "",
+              description: "",
+              packageImages: [],
+              activities: "",
+              highlights: [],
+              accommodation: "",
+              mealPlan: "",
+              travelTime: "",
+              transferMode: "",
+            },
+          ],
+        });
         
         setErrors({});
         
@@ -315,6 +320,20 @@ console.log(packageDetails)
             </h5>
           </div>
           <div className="card-body" style={{ backgroundColor: "#f8f9fa", borderRadius: "0 0 8px 8px" }}>
+            <div className="mb-3">
+              <input
+                type="text"
+                className={`form-control ${errors[`place-${index}`] ? "is-invalid" : ""}`}
+                placeholder="Place"
+                onChange={(e) => handleDayChange(index, "place", e.target.value)}
+                style={{
+                  borderRadius: "8px",
+                  boxShadow: "inset 0 1px 3px rgba(0, 0, 0, 0.12)",
+                  transition: "border-color 0.3s ease",
+                }}
+              />
+              {errors[`place-${index}`] && <div className="invalid-feedback">{errors[`place-${index}`]}</div>}
+            </div>
             <div className="mb-3">
               <textarea
                 className={`form-control ${errors[`description-${index}`] ? "is-invalid" : ""}`}

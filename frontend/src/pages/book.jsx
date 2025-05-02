@@ -8,7 +8,7 @@ const BookingPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const selectedPackage = location.state?.package;
-
+console.log(selectedPackage)
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -32,13 +32,13 @@ const BookingPage = () => {
       try {
         const bookingData = {
           ...values,
-          packageId: selectedPackage.packageId,
+          packageId: selectedPackage._id,
           packageName: selectedPackage.name,
           packagePrice: selectedPackage.price,
           status: "confirmed",
           createdAt: new Date().toISOString()
         };
-
+        console.log(bookingData)
         const response = await axios.post(
           "http://localhost:5001/api/bookings",
           bookingData,
@@ -48,14 +48,12 @@ const BookingPage = () => {
               'Content-Type': 'application/json'
             }
           }
-        );
-
-        if (response.data.success) {
+        ).then((res)=>{
           alert("Booking Successful!");
-          navigate("/bookings"); // Redirect to bookings page
-        } else {
-          alert("Booking failed. Please try again.");
-        }
+          navigate("/bookings");
+        }).catch((err)=>{
+          console.log(err)
+        });
       } catch (error) {
         console.error("Error creating booking:", error);
         alert("An error occurred. Please try again.");
